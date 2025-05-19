@@ -85,7 +85,7 @@
 
     let round = 1;
     let timer = null;
-    let time = 0;
+    let time = 0.0;
     let matches = 0;
     let flipped = [];
     let symbols = [];
@@ -118,7 +118,7 @@
 
     function updateUI() {
       roundInfo.textContent = "Round " + round + ": " + conditions[round - 1];
-      timeDisplay.textContent = time + "s";
+      timeDisplay.textContent = time.toFixed(1) + "s";
       matchesDisplay.textContent = matches;
     }
 
@@ -137,15 +137,17 @@
           updateUI();
           if (matches === 3) endRound();
         }, 500);
+      } else {
+        stopAllAudio(); sendToSheet();
       }
     }
 
     function startTimer() {
-      time = 0;
-      timeDisplay.textContent = "0s";
+      time = 0.0;
+      timeDisplay.textContent = "0.0s";
       timer = setInterval(() => {
-        time++;
-        timeDisplay.textContent = time + "s";
+        time += 0.1;
+        timeDisplay.textContent = time.toFixed(1) + "s";
       }, 1000);
     }
 
@@ -160,6 +162,8 @@
       if (round < 3) {
         round++;
         newGame();
+      } else {
+        stopAllAudio(); sendToSheet();
       }
     }
 
@@ -168,6 +172,22 @@
       if (round === 2) loudAudio.play();
       else if (round === 3) focusAudio.play();
       createBoard();
+
+// Google Sheets integration
+function sendToSheet() {
+  fetch("https://api.sheetbest.com/sheets/f2fb5301-75cc-4869-97d4-fc131fdec2b9", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      "User ID": Date.now(),
+      "Round 1": times[0] || 0,
+      "Round 2": times[1] || 0,
+      "Round 3": times[2] || 0,
+      "Timestamp": new Date().toISOString()
+    })
+  });
+}
+
       startTimer();
     }
 
@@ -181,6 +201,22 @@
     }
 
     createBoard();
+
+// Google Sheets integration
+function sendToSheet() {
+  fetch("https://api.sheetbest.com/sheets/f2fb5301-75cc-4869-97d4-fc131fdec2b9", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      "User ID": Date.now(),
+      "Round 1": times[0] || 0,
+      "Round 2": times[1] || 0,
+      "Round 3": times[2] || 0,
+      "Timestamp": new Date().toISOString()
+    })
+  });
+}
+
   </script>
 </body>
 </html>
