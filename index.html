@@ -117,7 +117,8 @@
 
     function endRound() {
       clearInterval(timer);
-      times.push(time.toFixed(6));
+      const precise = Number(time.toFixed(6));
+      times.push(precise);
       if (round < 3) {
         round++;
         setTimeout(startRound, 1000);
@@ -130,7 +131,7 @@
 
     function showResults() {
       results.style.display = "block";
-      resultsRow.innerHTML = times.map(t => `<td>${t}s</td>`).join("");
+      resultsRow.innerHTML = times.map(t => `<td>${t.toFixed(6)}s</td>`).join("");
     }
 
     function sendToSheet() {
