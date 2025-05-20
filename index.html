@@ -69,7 +69,7 @@
       timeDisplay.textContent = "0.000000s";
       createBoard();
       timer = setInterval(() => {
-        time += 0.01;
+        time += 0.000001;
         timeDisplay.textContent = time.toFixed(6) + "s";
       }, 10);
     }
