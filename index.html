@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Memory Game Study</title>
+  <title>משחק הזיכרון</title>
   <style>
     body { font-family: sans-serif; text-align: center; background: #f3f4f6; color: #111; padding: 20px; }
     .game-board { display: grid; grid-template-columns: repeat(3, 100px); gap: 10px; justify-content: center; margin: 20px 0; }
@@ -21,9 +21,9 @@
 <body>
   <div id="popup">
     <div id="popup-content">
-      <h2>Welcome!</h2>
-      <p>This game includes different sound conditions.<br><strong>Please wear headphones.</strong></p>
-      <button onclick="startGame()">Start</button>
+      <h2>אהלן! תודה שהסכמתם לקחת חלק בניסוי שלנו!</h2>
+      <p>המשחק הזה כולל סאונד, אז על מנת שהניסוי יהיה מדוייק.<br><strong>אנא שימו אזניות</strong><br>תודה!</p>
+      <button onclick="startGame()">התחל משחק</button>
     </div>
   </div>
 
@@ -32,9 +32,9 @@
   <div class="game-board" id="game-board"></div>
 
   <div id="results" style="display:none;">
-    <h2>Results</h2>
+    <h2>תוצאות</h2>
     <table>
-      <thead><tr><th>Round 1</th><th>Round 2</th><th>Round 3</th></tr></thead>
+      <thead><tr><th>סבב ראשון</th><th>סבב שני</th><th>סבב שלישי</th></tr></thead>
       <tbody><tr id="results-row"></tr></tbody>
     </table>
   </div>
