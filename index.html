@@ -52,8 +52,9 @@
     const focusAudio = document.getElementById("focus-audio");
 
     let round = 1;
-    let flipped = [], matches = 0, timer = null, time = 0;
+    let flipped = [], matches = 0;
     const times = [];
+    let startTime = 0, animationFrame;
 
     function startGame() {
       popup.style.display = "none";
@@ -65,13 +66,11 @@
       if (round === 2) loudAudio.play();
       if (round === 3) focusAudio.play();
       roundInfo.textContent = "Round " + round;
-      time = 0; matches = 0;
+      matches = 0;
       timeDisplay.textContent = "0.000000s";
       createBoard();
-      timer = setInterval(() => {
-        time += 0.000001;
-        timeDisplay.textContent = time.toFixed(6) + "s";
-      }, 10);
+      startTime = performance.now();
+      updateTimer();
     }
 
     function stopAudio() {
@@ -115,10 +114,20 @@
       }
     }
 
+    function updateTimer() {
+      const now = performance.now();
+      const elapsed = (now - startTime) / 1000;
+      timeDisplay.textContent = elapsed.toFixed(6) + "s";
+      animationFrame = requestAnimationFrame(updateTimer);
+    }
+
     function endRound() {
-      clearInterval(timer);
-      const precise = Number(time.toFixed(6));
+      cancelAnimationFrame(animationFrame);
+      const endTime = performance.now();
+      const duration = (endTime - startTime) / 1000;
+      const precise = Number(duration.toFixed(6));
       times.push(precise);
+
       if (round < 3) {
         round++;
         setTimeout(startRound, 1000);
