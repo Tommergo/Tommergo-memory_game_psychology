@@ -54,7 +54,7 @@
     let round = 1;
     let flipped = [], matches = 0;
     const times = [];
-    let startTime = 0, animationFrame;
+    let startTime = 0, frameRequest = null;
 
     function startGame() {
       popup.style.display = "none";
@@ -118,11 +118,11 @@
       const now = performance.now();
       const elapsed = (now - startTime) / 1000;
       timeDisplay.textContent = elapsed.toFixed(6) + "s";
-      animationFrame = requestAnimationFrame(updateTimer);
+      frameRequest = requestAnimationFrame(updateTimer);
     }
 
     function endRound() {
-      cancelAnimationFrame(animationFrame);
+      cancelAnimationFrame(frameRequest);
       const endTime = performance.now();
       const duration = (endTime - startTime) / 1000;
       const precise = Number(duration.toFixed(6));
