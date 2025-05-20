@@ -117,7 +117,7 @@
     function updateTimer() {
       const now = performance.now();
       const elapsed = (now - startTime) / 1000;
-      timeDisplay.textContent = elapsed.toFixed(6) + "s";
+      timeDisplay.textContent = elapsed.toFixed(8) + "s";
       frameRequest = requestAnimationFrame(updateTimer);
     }
 
@@ -125,7 +125,7 @@
       cancelAnimationFrame(frameRequest);
       const endTime = performance.now();
       const duration = (endTime - startTime) / 1000;
-      const precise = Number(duration.toFixed(6));
+      const precise = Number(duration.toFixed(8));
       times.push(precise);
 
       if (round < 3) {
@@ -140,7 +140,7 @@
 
     function showResults() {
       results.style.display = "block";
-      resultsRow.innerHTML = times.map(t => `<td>${t.toFixed(6)}s</td>`).join("");
+      resultsRow.innerHTML = times.map(t => `<td>${t.toFixed(8)}s</td>`).join("");
     }
 
     function sendToSheet() {
