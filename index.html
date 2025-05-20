@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="he">
 <head>
   <meta charset="UTF-8" />
@@ -208,7 +209,7 @@
       <div class="game-header">ניסוי זיכרון והשפעת מוזיקה</div>
       <h3 id="round-info"></h3>
       <p>התאם את הכרטיסים עם אותו ערך</p>
-      <p id="match-count">זוגות שהתאימו: 0/3</p>
+      <p id="match-count"></p>
       <div class="game-board" id="game-board"></div>
     </div>
   </div>
@@ -259,7 +260,7 @@
       if (round === 3) focusAudio.play();
       roundInfo.textContent = `סיבוב ${round} מתוך 3`;
       matches = 0;
-      matchCount.textContent = `זוגות שהתאימו: 0/3`;
+      matchCount.textContent = `זוגות שהתאימו: 0/6`;
       timeDisplay.textContent = "0.000000s";
       createBoard();
       startTime = performance.now();
@@ -272,7 +273,15 @@
 
     function createBoard() {
       board.innerHTML = "";
-      const symbols = shuffle(["חתול", "חתול", "כיסא", "כיסא", "בננה", "בננה"]);
+const symbols = shuffle([
+  "חתול", "חתול",
+  "כלב", "כלב",
+  "דלת", "דלת",
+  "מים", "מים",
+  "שמש", "שמש",
+  "ספר", "ספר"
+]);
+
       symbols.forEach(sym => {
         const card = document.createElement("div");
         card.className = "card";
@@ -311,12 +320,12 @@
             flipped.forEach(c => c.classList.remove("flip"));
           } else {
             matches++;
-            matchCount.textContent = `זוגות שהתאימו: ${matches}/3`;
+            matchCount.textContent = `זוגות שהתאימו: ${matches}/6`;
           }
 
           flipped = [];
 
-          if (matches === 3) endRound();
+          if (matches === 6) endRound();
         }, 500);
       }
     }
