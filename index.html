@@ -1,16 +1,36 @@
 <!DOCTYPE html>
 <html lang="he">
 <head>
-  <meta property="og:title" content="ניסוי זיכרון והשפעת מוזיקה" />
-<meta property="og:description" content="משחק זיכרון שמשווה בין השפעות של סוגי מוזיקה על ריכוז וזמן תגובה." />
-<meta property="og:image" content="https://tommergo.github.io/Tommergo-memory_game_psychology/preview.jpg" />
-<meta property="og:url" content="https://tommergo.github.io/Tommergo-memory_game_psychology/" />
-<meta property="og:type" content="website" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>משחק הזיכרון</title>
   <link href="https://fonts.googleapis.com/css2?family=Assistant&display=swap" rel="stylesheet">
   <style>
+    /* --- Modal Styles --- */
+    .modal-overlay {
+      position: fixed; /* Stay in place even when scrolling */
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+      display: flex;
+      justify-content: center; /* Center horizontally */
+      align-items: center; /* Center vertically */
+      z-index: 1000; /* Make sure it's on top of everything else */
+    }
+
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      max-width: 500px; /* Prevents the modal from being too wide on large screens */
+      width: 90%; /* Responsive for smaller screens */
+      text-align: center;
+    }
+    /* --- End Modal Styles --- */
+
     body {
       direction: rtl;
       font-family: 'Assistant', sans-serif;
@@ -18,158 +38,28 @@
       background: #f3f4f6;
       color: #111;
       padding: 20px;
-      overflow-y: auto;
     }
-
-    .game-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .game-card {
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-      padding: 24px;
-      max-width: 400px;
-      width: 100%;
-      overflow: hidden;
-    }
-
-    .game-header {
-      background-color: #4f46e5;
-      color: white;
-      font-size: 1.4em;
-      font-weight: bold;
-      padding: 16px;
-      border-radius: 12px 12px 0 0;
-      margin: -24px -24px 16px -24px;
-    }
-
-    #round-info {
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
-
-    #match-count {
-      font-size: 0.9em;
-      color: #555;
-      margin-bottom: 16px;
-    }
-
-    button {
-      font-family: 'Assistant', sans-serif;
-      font-size: 1.2em;
-      padding: 10px 20px;
-      cursor: pointer;
-      border: none;
-      border-radius: 8px;
-      background-color: #4f46e5;
-      color: white;
-      margin-top: 10px;
-    }
-
-    .game-board {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      justify-content: center;
-      margin: 20px 0;
-    }
-
-    .card {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      max-width: 100px;
-      max-height: 100px;
-      perspective: 1000px;
-    }
-
-    .card-inner {
-      width: 100%;
-      height: 100%;
-      transition: transform 0.6s;
-      transform-style: preserve-3d;
-      position: relative;
-    }
-
-    .card.flip .card-inner {
-      transform: rotateY(180deg);
-    }
-
-    .card-front, .card-back {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      backface-visibility: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2em;
-      border-radius: 8px;
-      font-family: 'Assistant', sans-serif;
-    }
-
-    .card-front {
-      background-color: #a5b4fc;
-    }
-
-    .card-back {
-      background-color: #4f46e5;
-      color: white;
-      transform: rotateY(180deg);
-    }
-
-    table {
-      margin: 16px auto 0;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px 16px;
-      font-size: 1em;
-    }
-
-    th {
-      background-color: #4f46e5;
-      color: white;
-      font-weight: bold;
-    }
-
-    #time {
-      display: none;
-    }
-
-    #popup, #confirm-headphones, #results-popup, #next-round-popup {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
-    }
-
-    #popup-content, #results-popup-content, #next-round-content {
-      background: white;
-      padding: 32px;
-      border-radius: 16px;
-      text-align: center;
-      max-width: 360px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-    }
-
-    #results-popup-content h2, #next-round-content h2 {
-      margin-bottom: 16px;
-      font-size: 1.4em;
-    }
+    .game-container { display: flex; justify-content: center; align-items: center; }
+    .game-card { background: white; border-radius: 16px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); padding: 24px; max-width: 400px; width: 100%; overflow: hidden; }
+    .game-header { background-color: #4f46e5; color: white; font-size: 1.4em; font-weight: bold; padding: 16px; border-radius: 12px 12px 0 0; margin: -24px -24px 16px -24px; }
+    #round-info { font-weight: bold; margin-bottom: 8px; }
+    #match-count { font-size: 0.9em; color: #555; margin-bottom: 16px; }
+    .game-board { display: grid; grid-template-columns: repeat(2, max-content); gap: 10px; justify-content: center; margin: 20px 0; }
+    .card { width: 100px; aspect-ratio: 1 / 1; max-width: 100px; max-height: 100px; perspective: 1000px; }
+    .card-inner { width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; position: relative; }
+    .card.flip .card-inner { transform: rotateY(180deg); }
+    .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; font-size: 2em; border-radius: 8px; font-family: 'Assistant', sans-serif; }
+    .card-front { background-color: #a5b4fc; }
+    .card-back { background-color: #4f46e5; color: white; transform: rotateY(180deg); }
+    table { margin: 16px auto 0; border-collapse: collapse; }
+    th, td { border: 1px solid #ccc; padding: 8px 16px; font-size: 1em; }
+    th { background-color: #4f46e5; color: white; font-weight: bold; }
+    button { font-family: 'Assistant', sans-serif; font-size: 1.2em; padding: 10px 20px; cursor: pointer; border: none; border-radius: 8px; background-color: #4f46e5; color: white; margin-top: 10px; }
   </style>
 </head>
 <body>
-  <div id="popup">
-    <div id="popup-content">
+  <div id="popup" class="modal-overlay">
+    <div class="modal-content">
       <h2>אהלן!<br> תודה שהסכמתם לקחת חלק בניסוי שלנו!</h2>
       <h4>
         הניסוי שלנו בודק את ההשפעה של סאונד על ביצועים בזיכרון.<br>
@@ -181,33 +71,31 @@
     </div>
   </div>
 
-  <div id="confirm-headphones" style="display:none;">
-    <div id="popup-content">
+  <div id="confirm-headphones" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
       <h1>האם שמתם אוזניות?</h1>
       <h2>חשוב לנו שתהיו עם אוזניות כדי שהניסוי יהיה מדויק</h2>
       <button onclick="confirmHeadphones()">כן, אפשר להתחיל</button>
     </div>
   </div>
 
-  <div id="next-round-popup" style="display:none;">
-    <div id="next-round-content">
+  <div id="next-round-popup" class="modal-overlay" style="display:none;">
+    <div id="next-round-content" class="modal-content">
       <h2>מוכן לסבב הבא?</h2>
       <p>לחץ כדי להמשיך לסבב הבא</p>
       <button onclick="startActualRound()">התחל סבב</button>
     </div>
   </div>
 
-  <div id="results-popup" style="display:none;">
-    <div id="popup-content">
+  <div id="results-popup" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
       <h2>תוצאות המשחק</h2>
       <table>
-        <thead><tr><th>סבב ראשון</th><th>סבב שני</th><th>סבב שלישי</th></tr></thead>
+        <thead><tr><th>ללא מוזיקה</th><th>מוזיקה מוכרת</th><th>מוזיקת ריכוז</th></tr></thead>
         <tbody><tr id="results-row"></tr></tbody>
       </table>
     </div>
   </div>
-
-  <span id="time" style="display: none;">0.000000s</span>
 
   <div class="game-container">
     <div class="game-card">
@@ -223,8 +111,11 @@
   <audio id="focus-audio" src="focus-music.mp3" preload="auto"></audio>
 
   <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      popup.style.display = "flex";
+    });
+
     const board = document.getElementById("game-board");
-    const timeDisplay = document.getElementById("time");
     const roundInfo = document.getElementById("round-info");
     const matchCount = document.getElementById("match-count");
     const resultsRow = document.getElementById("results-row");
@@ -236,8 +127,16 @@
 
     let round = 1;
     let flipped = [], matches = 0;
-    const times = [];
     let startTime = 0, frameRequest = null;
+
+    const categories = {
+      none: ["חתול", "חתול", "כלב", "כלב"],
+      loud: ["אדום", "אדום", "כחול", "כחול"],
+      focus: ["תל אביב", "תל אביב", "חיפה", "חיפה"]
+    };
+
+    let roundOrder = shuffle(["none", "loud", "focus"]);
+    let timesByType = { none: null, loud: null, focus: null };
 
     function askHeadphones() {
       popup.style.display = "none";
@@ -245,29 +144,22 @@
     }
 
     function confirmHeadphones() {
-  document.getElementById("confirm-headphones").style.display = "none";
-  startActualRound();
-}
-
-    function startGame() {
-  round = 1;
-  startActualRound();
-}
-
-    function startRound() {
-      nextRoundPopup.style.display = "flex";
+      document.getElementById("confirm-headphones").style.display = "none";
+      startActualRound();
     }
 
     function startActualRound() {
       nextRoundPopup.style.display = "none";
       stopAudio();
-      if (round === 2) loudAudio.play();
-      if (round === 3) focusAudio.play();
-      roundInfo.textContent = `סיבוב ${round} מתוך 3`;
+      let currentCondition = roundOrder[round - 1];
+      if (currentCondition === "loud") loudAudio.play();
+      if (currentCondition === "focus") focusAudio.play();
+
+      roundInfo.textContent = `סיבוב ${round} מתוך 3 (${translateCondition(currentCondition)})`;
+
       matches = 0;
-      matchCount.textContent = `זוגות שהתאימו: 0/6`;
-      timeDisplay.textContent = "0.000000s";
-      createBoard();
+      matchCount.textContent = `זוגות שהתאימו: 0/2`;
+      createBoard(currentCondition);
       startTime = performance.now();
       updateTimer();
     }
@@ -276,17 +168,9 @@
       [loudAudio, focusAudio].forEach(a => { a.pause(); a.currentTime = 0; });
     }
 
-    function createBoard() {
+    function createBoard(condition) {
       board.innerHTML = "";
-const symbols = shuffle([
-  "חתול", "חתול",
-  "כלב", "כלב",
-  "דלת", "דלת",
-  "מים", "מים",
-  "שמש", "שמש",
-  "ספר", "ספר"
-]);
-
+      const symbols = shuffle(categories[condition]);
       symbols.forEach(sym => {
         const card = document.createElement("div");
         card.className = "card";
@@ -301,17 +185,8 @@ const symbols = shuffle([
       });
     }
 
-    function shuffle(arr) {
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    }
-
     function flip(card) {
       if (card.classList.contains("flip") || flipped.length === 2) return;
-
       card.classList.add("flip");
       flipped.push(card);
 
@@ -325,59 +200,75 @@ const symbols = shuffle([
             flipped.forEach(c => c.classList.remove("flip"));
           } else {
             matches++;
-            matchCount.textContent = `זוגות שהתאימו: ${matches}/6`;
+            matchCount.textContent = `זוגות שהתאימו: ${matches}/2`;
           }
 
           flipped = [];
-
-          if (matches === 6) endRound();
+          if (matches === 2) endRound();
         }, 500);
       }
     }
 
     function updateTimer() {
       const now = performance.now();
-      const elapsed = (now - startTime) / 1000;
-      timeDisplay.textContent = elapsed.toFixed(4) + "s";
       frameRequest = requestAnimationFrame(updateTimer);
     }
 
-  function endRound() {
-  cancelAnimationFrame(frameRequest);
-  const endTime = performance.now();
-  const duration = (endTime - startTime) / 1000;
-  const precise = Number(duration.toFixed(4));
-  times.push(precise);
+    function endRound() {
+      cancelAnimationFrame(frameRequest);
+      const endTime = performance.now();
+      const duration = (endTime - startTime) / 1000;
+      const precise = Number(duration.toFixed(4));
+      let condition = roundOrder[round - 1];
+      timesByType[condition] = precise;
 
-  if (round < 3) {
-    round++;
-    nextRoundPopup.style.display = "flex";
-  } else {
-    stopAudio();
-    showResults();
-    sendToSheet();
-  }
-}
-
+      if (round < 3) {
+        round++;
+        nextRoundPopup.style.display = "flex";
+      } else {
+        stopAudio();
+        showResults();
+        sendToSheet();
+      }
+    }
 
     function showResults() {
       document.getElementById("results-popup").style.display = "flex";
-      resultsRow.innerHTML = times.map(t => `<td>${t.toFixed(4)}s</td>`).join("");
+      resultsRow.innerHTML = `
+        <td>${timesByType["none"]?.toFixed(4) || "-"}</td>
+        <td>${timesByType["loud"]?.toFixed(4) || "-"}</td>
+        <td>${timesByType["focus"]?.toFixed(4) || "-"}</td>
+      `;
     }
 
     function sendToSheet() {
       const body = {
         "User ID": Date.now(),
-        "Round 1": times[0],
-        "Round 2": times[1],
-        "Round 3": times[2],
+        "Round 1": roundOrder[0],
+        "Round 2": roundOrder[1],
+        "Round 3": roundOrder[2],
+        "Time (none)": timesByType["none"],
+        "Time (loud)": timesByType["loud"],
+        "Time (focus)": timesByType["focus"],
         "Timestamp": new Date().toISOString()
       };
-      fetch("https://api.sheetbest.com/sheets/f2fb5301-75cc-4869-97d4-fc131fdec2b9", {
+      fetch("https://api.sheetbest.com/sheets/5533ee17-c90e-48e6-a774-e97b75e39a37", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
       });
+    }
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function translateCondition(cond) {
+      return cond === "none" ? "ללא מוזיקה" : cond === "loud" ? "מוזיקה מוכרת" : "מוזיקת ריכוז";
     }
   </script>
 </body>
